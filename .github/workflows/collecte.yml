@@ -2,8 +2,10 @@ name: Collecte météo LFPB
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # toutes les 5 minutes
-  workflow_dispatch:        # permet aussi de le lancer manuellement pour tester
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [collecte-manuelle]
 
 permissions:
   contents: write 
