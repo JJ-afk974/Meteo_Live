@@ -94,32 +94,45 @@
   <div class="subtitle">Choisis un jour pour voir le détail</div>
 </header>
 
-<div class="grid" id="day-grid"></div>
+<div class="row-label high">🔺 Température plus élevée</div>
+<div class="grid" id="grid-high"></div>
+
+<div class="row-label low">🔻 Température plus basse</div>
+<div class="grid" id="grid-low"></div>
 
 <script>
   const joursNoms = ["Aujourd'hui", "Demain", "Après-demain"];
   const moisNoms = ["jan.", "fév.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
 
-  const gridEl = document.getElementById("day-grid");
-
-  const boxes = [];
-  for (let i = 0; i < 6; i++) {
+  function getDateInfo(i) {
     const d = new Date();
     d.setDate(d.getDate() + i);
     const dateLabel = `${d.getDate()} ${moisNoms[d.getMonth()]}`;
     const titre = joursNoms[i] ?? d.toLocaleDateString("fr-FR", { weekday: "long" });
     const titreCapitalise = titre.charAt(0).toUpperCase() + titre.slice(1);
-
-    boxes.push(`
-      <a class="day-box" href="index.html?day=${i + 1}">
-        <div class="icon">☁️</div>
-        <div class="value">${titreCapitalise}</div>
-        <div class="label">${dateLabel}</div>
-      </a>
-    `);
+    return { titreCapitalise, dateLabel };
   }
 
-  gridEl.innerHTML = boxes.join("");
+  function buildBox(i, type) {
+    const { titreCapitalise, dateLabel } = getDateInfo(i);
+    const icon = type === "high" ? "🔺" : "🔻";
+    return `
+      <a class="day-box ${type}" href="index.html?day=${i + 1}">
+        <div class="icon">${icon}</div>
+        <div class="day-name">${titreCapitalise}</div>
+        <div class="date-label">${dateLabel}</div>
+      </a>
+    `;
+  }
+
+  let highHtml = "";
+  let lowHtml = "";
+  for (let i = 0; i < 3; i++) {
+    highHtml += buildBox(i, "high");
+    lowHtml += buildBox(i, "low");
+  }
+  document.getElementById("grid-high").innerHTML = highHtml;
+  document.getElementById("grid-low").innerHTML = lowHtml;
 </script>
 
 </body>
